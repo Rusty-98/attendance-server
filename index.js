@@ -4,15 +4,16 @@ import cheerio from 'cheerio';
 import bodyParser from 'body-parser';
 import cron from 'node-cron';
 import cors from 'cors';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORTNUM || 3000;
 
-app.use(cors());
-
-
-
-
+app.use(cors({
+    origin: '*',
+}));
 app.use(bodyParser.json());
 
 let attendanceRecords = []; // To store attendance data for all students
@@ -94,6 +95,10 @@ fetchAllAttendanceData();
 // API endpoint to get all attendance data
 app.get('/attendance', (req, res) => {
     res.json(attendanceRecords);
+});
+
+app.get('/', (req, res) => {
+    res.send('Server is running cool ;-)');
 });
 
 app.listen(PORT, () => {
